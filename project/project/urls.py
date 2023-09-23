@@ -20,5 +20,5 @@ from django.urls import include, path
 # aqui se agregan las rutas para enlazarlas con las app existente
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("applogin/", include("appLogin.urls"))
+    path('', include("appLogin.urls"))
 ]
