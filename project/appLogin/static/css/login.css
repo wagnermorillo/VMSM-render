@@ -1,0 +1,30 @@
+/* family font */
+body{
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
+h1{
+    font-weight: 200;
+}
+.btn{
+    font-weight: 300;
+    background-color: #59ab6fff;
+    border: #59ab6fff;
+}
+.btn:hover{
+    background: rgb(63, 125, 80);
+}
+.btn-primary{
+    --bs-btn-active-bg: rgb(73, 141, 91) !important;
+}
+.btn-primary:focus{
+    background-color: #59ab6fff;
+    border-color: #59ab6fff !important;
+}
+.img-fluid{
+    width: 300px;
+    height: auto !important;
+}
+.p-4{
+    background-color: #f1f2f5 !important;
+}
