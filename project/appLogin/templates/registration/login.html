@@ -15,6 +15,13 @@ Zay Software commercial
     <div class="container text-center mt-5">
         <div class="row">
             <div class="col">
+                <!-- add button to return landingo page -->
+                <div>
+                    <a href="{% url "home"   %}" class="btn btn-success btn-sm position-absolute top-0 start-0 m-3" role="button">
+                        <i class="fas fa-angle-left"></i>&nbsp;
+                        Return Home
+                    </a>
+                </div>
                 <img class="img-fluid mx-auto d-block" src="{% static "img/logo.png" %}" alt="Mylogo">
                 <h1 class="mb-3">
                     Log in to Zay
