@@ -4,7 +4,7 @@ body{
     font-weight: 300;
 }
 h1{
-    font-weight: 200;
+    font-weight: 350;
 }
 .btn{
     font-weight: 300;
@@ -28,3 +28,15 @@ h1{
 .p-4{
     background-color: #f1f2f5 !important;
 }
+
+#id_username {
+    margin-left: 2%;
+    font-family: inherit;
+    font-weight: inherit;
+}
+#id_password {
+    margin-left: 2%;
+    font-family: inherit;
+    font-weight: inherit;
+}
+

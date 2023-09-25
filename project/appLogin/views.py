@@ -1,10 +1,8 @@
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout
-
 # Create your views here.
 
 # ejemplo de views
@@ -26,5 +24,5 @@ def contact(request : HttpRequest) -> HttpResponse:
 
 # views dashboard user already logged
 @login_required
-def trying(request : HttpRequest) -> HttpResponse:
-    return HttpResponse(f"username {request.user.username} password {request.user.password} id {request.user.id}")
+def main(request : HttpRequest) -> HttpResponse:
+    return render(request, 'appLogin/main.html')
