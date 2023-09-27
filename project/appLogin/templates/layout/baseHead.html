@@ -3,37 +3,41 @@
 
 <head>
     {% load static %}
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
-
-    <!-- Load fonts style after rendering the layout styles -->
-    <!-- Load fonts style after rendering the layout styles -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-
-    <link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}">
-
-    <!-- images and icons -->
-    <link rel="icon" href="{% static 'img/logo.png' %}" width="200" height="100">
-    <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% block title %}
         {% comment "title go here" %}{% endcomment %}
         {% endblock %}
     </title>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- images and icons -->
+    <link rel="icon" href="{% static 'img/logo.png' %}" width="200" height="100">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static "img/favicon.ico" %}">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}"> 
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <!-- load fontawesome -->
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
     <!-- block to agree link or script -->
-    {% block link %}{% endblock %}
+    {% block link %}
+    {% comment "link to css or js" %}{% endcomment %}
+    {% endblock %}
 </head>
 
-<!-- block content normal -->
-{% block content %}{% endblock %}
+<body>
+    {% block content %}
+    {% comment "body footer ect all content" %}{% endcomment %}
+    {% endblock %}
 
-
+    <!-- Start Script -->
+    <script src="{% static "js/jquery-1.11.0.min.js" %}"></script>
+    <script src="{% static "js/jquery-migrate-1.2.1.min.js" %}"></script>
+    <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- End Script -->
+    {% block script %}{% endblock %}
+</body>
 </html>

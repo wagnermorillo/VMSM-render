@@ -12,18 +12,14 @@
 
     <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
     <link rel="stylesheet" href="{% static "css/templatemo.css" %}">
-    <link rel="stylesheet" href="{% static "css/custom.css" %}">
 
     <!-- Load fonts style after rendering the layout styles -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
-    <link rel="stylesheet" href="{% static "css/fontawesome.min.css" %}">
-<!--
-    
-TemplateMo 559 Zay Shop
+    <!-- load fontawesome -->
+    <link href="{% static 'fontawesomefree/css/fontawesome.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/brands.css' %}" rel="stylesheet" type="text/css">
+    <link href="{% static 'fontawesomefree/css/solid.css' %}" rel="stylesheet" type="text/css">
 
-https://templatemo.com/tm-559-zay-shop
-
--->
 </head>
 
 <body>
@@ -35,7 +31,7 @@ https://templatemo.com/tm-559-zay-shop
                     <i class="fa fa-envelope mx-2"></i>
                     <a class="navbar-sm-brand text-light text-decoration-none" href="mailto:info@company.com">info@companyzay.com</a>
                     <i class="fa fa-phone mx-2"></i>
-                    <a class="navbar-sm-brand text-light text-decoration-none" >809-557-0000</a>
+                    <a class="navbar-sm-brand text-light text-decoration-none">809-557-0000</a>
                 </div>
                 <div>
                     <a class="btn btn-primary btn-lg" role="button" style="background-color: #59ab6fff;border-color: #59ab6fff; font-size: large;" href="{% url 'login'%}">
@@ -382,7 +378,6 @@ https://templatemo.com/tm-559-zay-shop
     <script src="{% static "js/jquery-migrate-1.2.1.min.js" %}"></script>
     <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
     <script src="{% static "js/templatemo.js" %}"></script>
-    <script src="{% static "js/custom.js" %}"></script>
     <!-- End Script -->
 </body>
 
