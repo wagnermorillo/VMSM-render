@@ -27,13 +27,14 @@ hr.h-color {
 #navbarUp{
     background-color: #212934 !important;
 }
+
 .sidebar li.active a,
 .sidebar li.active a:hover {
     color: #000;
 }
 
-.sidebar li a {
-    color: #fff;
+.sidebar li a{
+    color: white;
 }
 
 @media(max-width: 767px) {
@@ -54,4 +55,14 @@ hr.h-color {
 }
 .dropdown-menu {
     margin-left: -110px; 
+    background-color: white;
+}
+
+.dropdown-item:hover{
+    background-color: rgb(166, 214, 179);
+}
+
+.dropdown-item:active{
+    color: #000;
+    background-color: #59ab6fff;
 }

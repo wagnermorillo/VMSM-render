@@ -53,7 +53,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'project.urls' # para configurar las urls roots
 
-SESSION_COOKIE_AGE = 120  # time to expire the session (seconds)
+SESSION_COOKIE_AGE = 1200  # time to expire the session (seconds)
 
 TEMPLATES = [
     {
