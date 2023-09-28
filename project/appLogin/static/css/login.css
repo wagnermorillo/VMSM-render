@@ -15,9 +15,6 @@ h1{
 .btn:hover{
     background: rgb(63, 125, 80);
 }
-.btn-primary{
-    --bs-btn-active-bg: rgb(73, 141, 91) !important;
-}
 .btn-primary:focus{
     background-color: #59ab6fff;
     border-color: #59ab6fff !important;
