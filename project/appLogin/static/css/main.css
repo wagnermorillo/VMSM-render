@@ -3,12 +3,9 @@ body {
     font-family: 'Roboto', sans-serif;
     font-weight: 300;
 }
-.fa-lg{
-    margin-left: 10px;
-}
 
 #side_nav {
-    background: #212529;
+    background: #212934;
     min-width: 250px;
     max-width: 250px;
     transition: all 0.3s;
@@ -28,7 +25,7 @@ hr.h-color {
     border-radius: 8px;
 }
 #navbarUp{
-    background-color: #212529 !important;
+    background-color: #212934 !important;
 }
 .sidebar li.active a,
 .sidebar li.active a:hover {
@@ -54,4 +51,7 @@ hr.h-color {
 }
 #nombre_nav{
     color: white;
+}
+.dropdown-menu {
+    margin-left: -110px; 
 }
