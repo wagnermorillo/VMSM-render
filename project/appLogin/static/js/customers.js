@@ -64,7 +64,6 @@ const listClients = async()=>{
                 </tr>
             `;
             })
-            console.log(content);
             tableBodyClients.innerHTML = content;
 
         }catch(ex){
@@ -75,23 +74,11 @@ window.addEventListener("load", async()=>{
     await initDataTable();
 })
 
-// hidden components
-const tableData = document.getElementById("tableData");
-const activeForm = document.getElementById("activeForm");
-const formCustomer = document.getElementById("formCustomer");
-const activeTable = document.getElementById("activeTable");
+// logs to sucess create user
+var Alert = document.getElementById("Alert");
 
-// hidden table and show forms
-activeForm.addEventListener('click', function(){
-    // hidden the table
-    tableData.style.display = "none";
-    // show the forms
-    formCustomer.style.display = "block";
-});
+// close the alert after 5 seconds
+setTimeout(function(){
+    Alert.style.display = "none";
 
-// hidden forms and show table
-activeTable.addEventListener('click', function(){
-    
-    formCustomer.style.display = "none";
-    tableData.style.display = "block";
-});
+}, 5000);

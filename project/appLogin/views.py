@@ -1,4 +1,4 @@
-from django.http import HttpRequest, HttpResponse, JsonResponse
+from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -30,14 +30,32 @@ def contact(request : HttpRequest) -> HttpResponse:
 def home(request : HttpRequest) -> HttpResponse:
     return render(request, "appLogin/main.html")
 
-# views main customers/clients
+# views to see the datatable client
 @login_required
 def customers(request : HttpRequest) -> HttpResponse:
+    return render(request, "appLogin/customers.html")
+
+# views to create a client
+@login_required
+def customersCreate(request : HttpRequest) -> HttpResponse:
+    
     # logic
+    if request.method == "POST":
+        form = createClient(request.POST)
+        form.full_clean()
+        if form.is_valid():
+            form.save()
+            return render(request, "appLogin/customers.html",{"form" : form})
+        else:
+            return render(request, 
+                  "appLogin/customersCreate.html",
+                  {"form" : form})
+
     form = createClient()
     return render(request, 
-                  "appLogin/customers.html",
-                  {"form" : form})
+                  "appLogin/customersCreate.html",
+                  {"form" : form, 
+                   "formIncorrect" : 1})
 
 
 # Return data of clients

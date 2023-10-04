@@ -16,8 +16,8 @@ cedulaValidator = RegexValidator(
 # clients
 class Client(models.Model):
 
-    names = models.CharField("name client", max_length=255)
-    lastNames = models.CharField("last names client", max_length=255)
+    names = models.CharField("Names", max_length=255)
+    lastNames = models.CharField("Last names", max_length=255)
     email = models.EmailField(unique=True)
     adress = models.CharField(max_length=255)
     phone = models.CharField(validators=[phoneValidator], max_length=10)
