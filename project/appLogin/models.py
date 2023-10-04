@@ -28,7 +28,7 @@ class Client(models.Model):
     isDeleted = models.BooleanField(default=False, editable=False)
 
     def __str__(self) -> str:
-        return f"{self.names}, {self.lastNames}, {self.cedula}"
+        return f"{self.names}, {self.lastNames}, {self.cedula[:3]}-{self.cedula[3:10]}-{self.cedula[10:]}"
     
     class Meta:
         ordering = ["names"]

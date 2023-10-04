@@ -6,14 +6,12 @@
     </div>
 
     <ul class="list-unstyled px-2">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fa-solid fa-house"></i>
+        <li class=""><a href="{% url "home" %}" class="text-decoration-none px-3 py-2 d-block"><i class="fa-solid fa-house"></i>
                 Home</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fa-solid fa-list"></i>
                 Projects</a></li>
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block d-flex justify-content-between">
-                <span><i class="fa-regular fa-customer"></i> Messages</span>
-            </a>
-        </li>
+        <li class=""><a href="{% url "customers" %}" class="text-decoration-none px-3 py-2 d-block"><i class="fa-solid fa-users"></i>
+                Costumers</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
                     class="fal fa-envelope-open-text"></i> Services</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class="fal fa-users"></i>
