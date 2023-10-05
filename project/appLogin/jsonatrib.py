@@ -13,6 +13,7 @@ clientsAtributes = (
 
 # Client atrributes datatable
 clientsDatatable = (
+    "id",
     "names",
     "lastNames",
     "email",

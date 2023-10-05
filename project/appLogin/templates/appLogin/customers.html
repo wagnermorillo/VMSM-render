@@ -9,67 +9,102 @@ Zay Software commercial
 {% block link %}
 <link rel="stylesheet" href="{% static "css/customers.css" %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+{% csrf_token %}
 {% endblock %}
 
 
 {% comment "to write body html" %}{% endcomment %}
 {% block content %}
-    <div class="main-container d-flex"> 
-        {% include "layout/baseMain.html" %}
-        <div class="content">  
-            {% include "layout/baseOption.html" %}
-            <div class="dashboard-content px-3 pt-4 mt-4">
-                <div class="row" id="tableData">
-                    <div class="text-center">
-                        {% if form %}
-                        <div class="alert alert-success" id="Alert">
-                            <strong>sucess:</strong> has been registered {{ form.names.value }} {{ form.lastNames.value }}
-                        </div>                        
-                        {% endif %}
-                        <h2 class="fs-2">
-                            Costumers
-                        </h2>
+<div class="main-container d-flex">
+    {% include "layout/baseMain.html" %}
+    <div class="content">
+        {% include "layout/baseOption.html" %}
+        <div class="dashboard-content px-3 pt-4 mt-4">
+            <div class="row" id="tableData">
+                <div class="text-center">
+                    <h2 class="fs-2">
+                        Costumers
+                    </h2>
+                </div>
+                <div class="d-flex justify-content-start align-items-center mt-2">
+                    <a class="btn btn-dark btn-sm" href="{% url "customersCreate" %}">
+                        <i class="fa-solid fa-plus"></i>
+                        <span class="add">
+                            add Customer
+                        </span>
+                    </a>
+                </div>
+                <div class="col-sm-12 col-md-12 col-xl-12 mt-4">
+                    <div class="table-responsive">
+                        <table id="datatable-clients" class="table table-bordered table-striped table-hover">
+                            <caption>
+                                Table Costumers
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th class="centered table-danger">#</th>
+                                    <th class="centered table-danger">Names</th>
+                                    <th class="centered table-danger">Last names</th>
+                                    <th class="centered table-danger">Email</th>
+                                    <th class="centered table-danger">Phone</th>
+                                    <th class="centered table-danger">Cedula</th>
+                                    <th class="centered table-danger">Birthday</th>
+                                    <th class="centered table-danger">Options</th>
+                                </tr>
+                            <tbody id="tableBodyClients" class="table-group-divider"></tbody>
+                            </thead>
+                        </table>
                     </div>
-                    <div class="d-flex justify-content-start align-items-center mt-2">
-                        <a class="btn btn-dark btn-sm" href="{% url "customersCreate" %}">
-                            <i class="fa-solid fa-plus"></i>
-                            <span class="add">
-                                add Customer
-                            </span>
-                        </a>
-                    </div>
-                    <div class="col-sm-12 col-md-12 col-xl-12 mt-4">
-                        <div class="table-responsive">
-                            <table id="datatable-clients" class="table table-bordered table-striped table-hover">
-                                <caption>
-                                    Table Costumers
-                                </caption>
-                                <thead>
-                                    <tr>
-                                        <th class="centered table-danger">#</th>
-                                        <th class="centered table-danger">Names</th>
-                                        <th class="centered table-danger">Last names</th>
-                                        <th class="centered table-danger">Email</th>
-                                        <th class="centered table-danger">Phone</th>
-                                        <th class="centered table-danger">Cedula</th>
-                                        <th class="centered table-danger">Birthday</th>
-                                        <th class="centered table-danger">Options</th>
-                                    </tr>
-                                    <tbody id="tableBodyClients" class="table-group-divider"></tbody>
-                                </thead>
-                            </table>
+                </div>
+                {% comment "the modal warning of delete costumer" %}{% endcomment %}
+                <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">warning</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>Are you sure you want to delete this costumer?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button id="accept-button" type="button" class="btn btn-primary">Accept</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>         
+                {% comment "the modalwarning of delete costumer" %}{% endcomment %}
+
+                {% comment "the modal information of delete costumer" %}{% endcomment %}
+                <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Information</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>the customer has been successfully deleted</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" id="refresh-button">Accept</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment "the modal to information or update client" %}{% endcomment %}
+            </div>
         </div>
     </div>
-    <!-- Start Script -->
-      <script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
-      <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js" ></script>
-      <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js" ></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-      <script src="{% static "js/customers.js" %}"></script>
-    <!-- End Script -->
+</div>
+</div>-->
+<!-- Start Script -->
+<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+<script src="{% static "js/customers.js" %}"></script>
+<!-- End Script -->
 {% endblock %}

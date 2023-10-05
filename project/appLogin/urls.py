@@ -9,6 +9,8 @@ urlpatterns = [
     path("contact/", views.contact, name="contact"),
     path("main/home/", views.home, name="mainHome"),
     path("resources/listClients/", views.listClients, name="listClients"),
+    path("resources/deleteClient/<int:id>/", views.deleteClient, name="deleteClient"),
     path("main/customers/", views.customers, name="customers"),
     path("main/customers/create/", views.customersCreate, name="customersCreate"),
+    path("main/products/", views.products, name="products"),
 ]
