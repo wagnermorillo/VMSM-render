@@ -1,6 +1,6 @@
 from django import forms
-from .models import Client
-from .jsonatrib import clientsAtributes
+from .models import Client, Product
+from .jsonatrib import clientsAtributes, ProductsAtributes
 # forms personalize
 
 # forms to create a Client
@@ -14,3 +14,9 @@ class createClient(forms.ModelForm):
             "phone" : forms.TextInput(attrs={"data-mask" : "000-000-0000"}),
             "cedula" : forms.TextInput(attrs={"data-mask" : "000-0000000-0"}),
         }
+
+class createProduct(forms.ModelForm):
+
+    class Meta:
+        model = Product
+        fields = list(ProductsAtributes)

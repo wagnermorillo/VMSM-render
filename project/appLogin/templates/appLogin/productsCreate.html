@@ -1,0 +1,83 @@
+{% extends "layout/baseHead.html" %}
+{% load static %}
+{% comment "To write the title head" %}{% endcomment %}
+{% block title %}
+Zay Software commercial
+{% endblock %}
+
+{% comment "to write link of css or else" %}{% endcomment %}
+{% block link %}
+<link rel="stylesheet" href="{% static "css/product.css" %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+<meta name="success" content="{{ success }}">
+{% endblock %}
+
+
+{% comment "to write body html" %}{% endcomment %}
+{% block content %}
+<div class="main-container d-flex">
+    {% include "layout/baseMain.html" %}
+    <div class="content">
+        {% include "layout/baseOption.html" %}
+        <div class="dashboard-content px-3 pt-4 mt-4">
+            <div class="row" id="formCustomer">
+                <div class="text-center">
+                    <h2 class="fs-2">
+                        Products
+                    </h2>
+                </div>
+                <div class="d-flex justify-content-start align-items-center mt-2">
+                    <a class="btn btn-dark btn-sm" href=" {% url "products" %}">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span class="add">
+                            return Products
+                        </span>
+                    </a>
+                </div>
+                {% comment "the modal to create or update client" %}{% endcomment %}
+                <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                    tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">successful</h5>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ text }} {{ form.name.value}}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="{% url "products" %}" type="button" class="btn btn-secondary">Accept</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment "the modal to create or update client" %}{% endcomment %}
+                <div class="container mt-1">
+                    <div class="row justify-content-center">
+                        <div class="col-md-5">
+                            <div class="p-4 border rounded">
+                                <form method="POST" id="form">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary">
+                                        Save
+                                    </button>
+                                    {{ form.non_field_errors }}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Start Script -->
+<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+<script src="{% static "js/productsCreate.js" %}"></script>
+<!-- End Script -->
+{% endblock %}

@@ -23,16 +23,34 @@ Zay Software commercial
             <div class="row" id="tableData">
                 <div class="text-center">
                     <h2 class="fs-2">
-                        Costumers
+                        Products
                     </h2>
                 </div>
                 <div class="d-flex justify-content-start align-items-center mt-2">
-                    <a class="btn btn-dark btn-sm" href="{% url "customersCreate" %}">
+                    <a class="btn btn-dark btn-sm" href="{% url "productsCreate" %}">
                         <i class="fa-solid fa-plus"></i>
                         <span class="add">
-                            add Customer
+                            add Product
                         </span>
                     </a>
+                </div>
+                <div class="col-sm-12 col-md-12 col-xl-12 mt-4">
+                    <div class="table-responsive">
+                        <table id="datatable-products" class="table table-bordered table-striped table-hover">
+                            <caption>
+                                Table Products
+                            </caption>
+                            <thead>
+                                <tr>
+                                    <th class="centered table-danger">#</th>
+                                    <th class="centered table-danger">Name</th>
+                                    <th class="centered table-danger">Description</th>
+                                    <th class="centered table-danger">Options</th>
+                                </tr>
+                            <tbody id="tableBodyProducts" class="table-group-divider"></tbody>
+                            </thead>
+                        </table>
+                    </div>
                 </div>
                 {% comment "the modal warning of delete costumer" %}{% endcomment %}
                 <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -43,7 +61,7 @@ Zay Software commercial
                                 <h5 class="modal-title" id="staticBackdropLabel">warning</h5>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure you want to delete this costumer?</p>
+                                <p>Are you sure you want to delete this product?</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -63,7 +81,7 @@ Zay Software commercial
                                 <h5 class="modal-title" id="staticBackdropLabel">Information</h5>
                             </div>
                             <div class="modal-body">
-                                <p>the customer has been successfully deleted</p>
+                                <p>the product has been successfully deleted</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="refresh-button">Accept</button>

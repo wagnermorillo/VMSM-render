@@ -21,3 +21,16 @@ clientsDatatable = (
     "cedula",
     "birthdate",
 )
+
+# Product attributes datatable
+productsDatatable = {
+    "id",
+    "name",
+    "descriptions",
+}
+
+# Product attributes
+ProductsAtributes = (
+    "name",
+    "descriptions",
+)
