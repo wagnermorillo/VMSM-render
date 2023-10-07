@@ -1,6 +1,8 @@
+from collections.abc import Iterable
 from django.db import models
 from django.core.validators import RegexValidator
 from django.core.validators import MinValueValidator
+from django.forms import ValidationError
 
 # validates
 phoneValidator = RegexValidator(
@@ -68,6 +70,20 @@ class Store(models.Model):
 
     def __str__(self) -> str:
         return f"{self.name} {self.location} {self.totalSpace} {self.adress}"
+    
+    def clean(self) -> None:
+        print("ESTA EN CLEAN()")
+        actual_value = Store.objects.get(pk=self.pk).totalSpace if self.pk else None
+
+        # to insert or update the attribute totalSpace
+        if actual_value and (not self.totalSpace >= actual_value - self.availableSpace):
+            print("TOTASPACE NUEVO NO ES UN VALOR CORRECTO")
+            raise ValidationError({
+                "error" : "invalid value to TotaSpace"
+            })
+        else:
+            print("TODO FUE BIEN")
+            super().clean()
     
     class Meta:
         ordering = ["name"]

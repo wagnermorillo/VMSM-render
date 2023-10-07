@@ -30,7 +30,31 @@ productsDatatable = {
 }
 
 # Product attributes
-ProductsAtributes = (
+productsAtributes = (
     "name",
     "descriptions",
+)
+
+# Store atrributes datatable
+storesDatatable = {
+    "id",
+    "location",
+    "name",
+    "height",
+    "width",
+    "depth",
+    "totalSpace",
+    "availableSpace",
+    "recordQuantity",
+    "adress",
+}
+
+# Store attributes
+storeAtributes = (
+    "location",
+    "name",
+    "height",
+    "width",
+    "depth",
+    "adress",
 )

@@ -7,7 +7,7 @@ Zay Software commercial
 
 {% comment "to write link of css or else" %}{% endcomment %}
 {% block link %}
-<link rel="stylesheet" href="{% static "css/product.css" %}">
+<link rel="stylesheet" href="{% static "css/stores.css" %}">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
 {% csrf_token %}
 {% endblock %}
@@ -23,31 +23,36 @@ Zay Software commercial
             <div class="row" id="tableData">
                 <div class="text-center">
                     <h2 class="fs-2">
-                        Products
+                        Stores
                     </h2>
                 </div>
                 <div class="d-flex justify-content-start align-items-center mt-2">
-                    <a class="btn btn-dark btn-sm" href="{% url "productsCreate" %}">
+                    <a class="btn btn-dark btn-sm" href="{% url "storesCreate" %}">
                         <i class="fa-solid fa-plus"></i>
                         <span class="add">
-                            add Product
+                            add Store
                         </span>
                     </a>
                 </div>
                 <div class="col-sm-12 col-md-12 col-xl-12 mt-4">
                     <div class="table-responsive">
-                        <table id="datatable-products" class="table table-bordered table-striped table-hover">
+                        <table id="datatable-stores" class="table table-bordered table-striped table-hover">
                             <caption>
-                                Table Products
+                                Table Stores
                             </caption>
                             <thead>
                                 <tr>
                                     <th class="centered table-danger">#</th>
-                                    <th class="centered table-danger">Name</th>
-                                    <th class="centered table-danger">Description</th>
+                                    <th class="centered table-danger">Names</th>
+                                    <th class="centered table-danger">Location</th>
+                                    <th class="centered table-danger">Dimensions</th>
+                                    <th class="centered table-danger">Total Space</th>
+                                    <th class="centered table-danger">Available Space</th>
+                                    <th class="centered table-danger">Record Quantity</th>
+                                    <th class="centered table-danger">Adress</th>
                                     <th class="centered table-danger">Options</th>
                                 </tr>
-                            <tbody id="tableBodyProducts" class="table-group-divider"></tbody>
+                            <tbody id="tableBodyStores" class="table-group-divider"></tbody>
                             </thead>
                         </table>
                     </div>
@@ -61,7 +66,7 @@ Zay Software commercial
                                 <h5 class="modal-title" id="staticBackdropLabel">warning</h5>
                             </div>
                             <div class="modal-body">
-                                <p>Are you sure you want to delete this product?</p>
+                                <p>Are you sure you want to delete this store?</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -81,7 +86,7 @@ Zay Software commercial
                                 <h5 class="modal-title" id="staticBackdropLabel">Information</h5>
                             </div>
                             <div class="modal-body">
-                                <p>the product has been successfully deleted</p>
+                                <p>the store has been successfully deleted</p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-primary" id="refresh-button">Accept</button>
@@ -101,6 +106,6 @@ Zay Software commercial
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
-<script src="{% static "js/products.js" %}"></script>
+<script src="{% static "js/stores.js" %}"></script>
 <!-- End Script -->
 {% endblock %}

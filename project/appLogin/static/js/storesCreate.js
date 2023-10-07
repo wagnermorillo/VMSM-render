@@ -1,4 +1,3 @@
-// trying read success variable
 var success = document.querySelector('meta[name="success"]').getAttribute('content');
 
 if (success) {

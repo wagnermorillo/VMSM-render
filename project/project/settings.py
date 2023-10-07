@@ -32,13 +32,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "appLogin",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    "appLogin",
     "fontawesomefree",
 ]
 
@@ -59,7 +59,7 @@ SESSION_COOKIE_AGE = 1200  # time to expire the session (seconds)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'appLogin/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

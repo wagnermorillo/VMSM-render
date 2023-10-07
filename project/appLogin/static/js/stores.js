@@ -21,7 +21,7 @@ const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').ge
 
 // Add a click function to the button
 function showAlert(btnDelete) {
-    SelectId = btnDelete.getAttribute("data-client-id");
+    SelectId = btnDelete.getAttribute("data-store-id");
     $(warningModal).modal("show");
 }
 
@@ -29,12 +29,11 @@ function showAlert(btnDelete) {
 // add a event click to the button of the modal (accept)
 btnAccept.addEventListener("click", function () {
     // Get the necessary information from the button
-    const clientId = SelectId;
-    console.log(clientId);
+    const storeId = SelectId;
 
     //Make the AJAX request to delete the client
     $.ajax({
-        url: `/resources/deleteClient/${clientId}/`,
+        url: `/resources/deleteStore/${storeId}/`,
         type: 'POST',
         headers: {
             'X-CSRFToken': csrfToken // Add CSRF token as header
@@ -54,21 +53,20 @@ btnAccept.addEventListener("click", function () {
             });
         },
         error: function (error) {
-            // Manejar errores si es necesario
-            console.error('Error al eliminar el cliente:', error);
         }
     });
 });
 
 $(document).ready(function () {
-    var table = $('#datatable-clients').DataTable({
+    var table = $('#datatable-stores').DataTable({
         processing: true,
         serverSide: true,
         searching: true,
         ordering: false,
+        // scrollX: true,
         ajax: {
-            url: '/resources/listClients/',
-            dataSrc: "clients",
+            url: '/resources/listStores/',
+            dataSrc: "stores",
             type: "GET",
             data: function (d) {
                 return {
@@ -89,38 +87,26 @@ $(document).ready(function () {
                 orderable: true,
                 serverSide: false
             },
-            { data: 'names' },
-            { data: 'lastNames' },
-            { data: 'email' },
+            { data: 'name' },
+            { data: 'location' },
             {
-                data: 'phone',
-                render: function (data, type, row) {
-                    if (type === 'display' && data.length === 10) {
-                        return '(' + data.substring(0, 3) + ')-' + data.substring(3, 6) + '-' + data.substring(6, 10);
-                    }
-                    return data;
+                data: null,
+                render: function (data, type, row, meta) {
+                    return "(" + row.width + ", " + row.height + ", " + row.depth + ")"
                 }
             },
-            {
-                data: 'cedula',
-                render: function (data, type, row) {
-                    if (type === 'display' && data.length === 11) {
-                        // Formatea la cédula como XXX-XXXXXXX-X
-                        return data.substring(0, 3) + '-' + data.substring(3, 10) + '-' + data.substring(10);
-                    }
-                    return data;
-                },
-                orderable: true
-            },
-            { data: 'birthdate' },
+            { data: 'totalSpace' },
+            { data: 'availableSpace' },
+            { data: 'recordQuantity' },
+            { data: 'adress' },
             {
                 data: null,
                 render: function (data, type, row) {
                     // Retorna el HTML de los botones
-                    return `<a class='btn btn-sm btn-secondary update-button' href="/main/customers?clientId=${row.id}"'>
+                    return `<a class='btn btn-sm btn-secondary update-button' href="/main/stores?storeId=${row.id}"'>
                     <i class='fa-solid fa-pencil'></i>
                 </a>
-                <button class='btn btn-sm btn-danger delete-button' data-client-id='${row.id}' onclick='showAlert(this)'>
+                <button class='btn btn-sm btn-danger delete-button' data-store-id='${row.id}' onclick='showAlert(this)'>
                     <i class='fa-solid fa-trash-can'></i>
                 </button>`;
                 },
@@ -128,9 +114,9 @@ $(document).ready(function () {
 
         ],
         columnDefs: [
-            { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7] },
+            { className: "centered", targets: [0,1,2,3,4,5,6,7,8] },
             { orderable: false, targets: [] },
-            { searchable: false, targets: [0, 6, 7] },
+            { searchable: false, targets: [1,2,4,5,6,7] },
         ],
         pageLength: 5,
 
