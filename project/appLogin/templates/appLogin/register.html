@@ -1,0 +1,57 @@
+{% extends "layout/baseHead.html" %}
+{% load static %}
+{% comment "To write the title head" %}{% endcomment %}
+{% block title %}
+Zay Software commercial
+{% endblock %}
+
+{% comment "to write link of css or else" %}{% endcomment %}
+{% block link %}
+<link rel="stylesheet" href="{% static "css/register.css" %}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+{% csrf_token %}
+{% endblock %}
+
+
+{% comment "to write body html" %}{% endcomment %}
+{% block content %}
+<div class="main-container d-flex">
+    {% include "layout/baseMain.html" %}
+    <div class="content">
+        {% include "layout/baseOption.html" %}
+        
+        <div class="realContent">
+
+            <div class="ilustration">
+                <h2>Matriz de Cuadrados Editables con Almacenamiento Local</h1>
+                <label for="inputX">Tamaño X:</label>
+                <input type="number" id="inputX" value="5">
+                <label for="inputY">Tamaño Y:</label>
+                <input type="number" id="inputY" value="5">
+                <label for="numCajas">Número de Cuadrados:</label>
+                <input type="number" id="numCajas" value="10">
+                <label for="tamanoCajas">Tamaño de Cuadrados (px):</label>
+                <input type="number" id="tamanoCajas" value="50">
+                <button onclick="crearMatriz()">Crear Matriz</button>
+                <button id="editboton" onclick="editarMatriz()">Editar Matriz</button>
+    
+                <div class="container" id="matriz"></div>
+
+            </div>
+            <div class="registerPart">
+
+            </div>
+
+        </div>
+    </div>
+</div>
+</div>
+<!-- Start Script -->
+<script src="{% static "js/bootstrap.bundle.min.js" %}"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.10/jquery.mask.js"></script>
+<script src="{% static "js/register.js" %}"></script>
+<!-- End Script -->
+{% endblock %}

@@ -37,6 +37,10 @@ def home(request: HttpRequest) -> HttpResponse:
     return render(request, "appLogin/main.html")
 
 
+# testing registro
+@login_required
+def register(request: HttpRequest) -> HttpResponse:
+    return render(request, "appLogin/register.html")
 #########################################################
 #               views of client
 #########################################################
@@ -427,3 +431,6 @@ async def deleteStore(request: HttpRequest, id : int) -> HttpResponse:
         store.isDeleted = True
         await store.asave()
         return HttpResponse(status=200)
+    
+
+
