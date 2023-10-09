@@ -71,8 +71,8 @@ class Store(models.Model):
     def __str__(self) -> str:
         return f"{self.name} {self.location} {self.totalSpace} {self.adress}"
     
+    # method to valide the insert or update the store
     def clean(self) -> None:
-        print("ESTA EN CLEAN()")
         actual_value = Store.objects.get(pk=self.pk).totalSpace if self.pk else None
 
         # to insert or update the attribute totalSpace
@@ -110,6 +110,17 @@ class Record(models.Model):
     def __str__(self) -> str:
         return f"{self.idClient} {self.idStore} {self.isFragile}"
     
+    # method to check the date diff is valid
+    def clean(self) -> None:
+
+        # check the status
+        if  self.dateIn < self.dateOut:
+            super().clean()
+        else:
+            raise ValidationError({
+                "message" : "error in dateIn and dateOut"
+            })
+
     class Meta:
         ordering = ["dateIn"]
 
@@ -128,6 +139,7 @@ class RecordProduct(models.Model):
         return f"{self.idRecord} {self.idProduct} {self.quantity}"
     
     class Meta:
+        unique_together = [["idRecord", "idProduct"]]
         ordering = ["idRecord"]
     
 

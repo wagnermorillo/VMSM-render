@@ -58,3 +58,18 @@ storeAtributes = (
     "depth",
     "adress",
 )
+
+# Record atrributes datatable
+recordsDatatable ={
+    "idClient",
+    "idStore",
+    #"products",
+    "dateIn",
+    "dateOut",
+    "height",
+    "width",
+    "depth",
+    "totalVolume",
+    "isFragile",
+    "totalWeight",
+}

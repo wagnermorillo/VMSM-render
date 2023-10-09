@@ -3,9 +3,11 @@ from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
-from .models import Client, Product, Store
-from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable
+from django.db.models import Q, F, Value, CharField
+from django.db.models.functions import Concat
+from django.db import transaction
+from .models import Client, Product, Record, Store
+from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable, recordsDatatable
 from .forms import createClient, createProduct, createStore
 from asgiref.sync import sync_to_async
 # Create your views here
@@ -16,31 +18,57 @@ from asgiref.sync import sync_to_async
 #########################################################
 
 # views para redireccionar a home
+
+
 def redic(request: HttpRequest) -> HttpResponse:
     return redirect("home/")
 
 # views home
+
+
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, 'appLogin/index.html')
 
 # views about
+
+
 def about(request: HttpRequest) -> HttpResponse:
     return render(request, 'appLogin/about.html')
 
 # views contact
+
+
 def contact(request: HttpRequest) -> HttpResponse:
     return render(request, 'appLogin/contact.html')
 
 # views dashboard user already logged
+
+
 @login_required
 def home(request: HttpRequest) -> HttpResponse:
     return render(request, "appLogin/main.html")
+
+
+#########################################################
+#               views of register/record
+#########################################################
 
 
 # testing registro
 @login_required
 def register(request: HttpRequest) -> HttpResponse:
     return render(request, "appLogin/register.html")
+
+# table format to READ record
+
+
+def register2(request: HttpRequest) -> HttpResponse:
+
+    # normal render
+    return render(request,
+                  "appLogin/record.html")
+
+
 #########################################################
 #               views of client
 #########################################################
@@ -84,6 +112,8 @@ def customers(request: HttpRequest) -> HttpResponse:
     return render(request, "appLogin/customers.html")
 
 # views to create a client
+
+
 @login_required
 def customersCreate(request: HttpRequest) -> HttpResponse:
 
@@ -105,7 +135,7 @@ def customersCreate(request: HttpRequest) -> HttpResponse:
                           {"form": form})
 
     form = createClient()
-    return render(request, "appLogin/customersCreate.html", {"form" : form})
+    return render(request, "appLogin/customersCreate.html", {"form": form})
 
 
 #########################################################
@@ -172,7 +202,7 @@ def productsCreate(request: HttpRequest) -> HttpResponse:
                           {"form": form})
 
     form = createProduct()
-    return render(request, "appLogin/productsCreate.html", {"form" : form})
+    return render(request, "appLogin/productsCreate.html", {"form": form})
 
 
 #########################################################
@@ -182,7 +212,7 @@ def productsCreate(request: HttpRequest) -> HttpResponse:
 
 @login_required
 def stores(request: HttpRequest) -> HttpResponse:
-    
+
     # global variable
     storeId = request.GET.get("storeId")
     print(storeId)
@@ -196,66 +226,68 @@ def stores(request: HttpRequest) -> HttpResponse:
         if form.is_valid():
 
             # refill atributes that there are not in form
-            form.instance.totalSpace = form.cleaned_data["height"] * form.cleaned_data["width"] * form.cleaned_data["depth"]
+            form.instance.totalSpace = form.cleaned_data["height"] * \
+                form.cleaned_data["width"] * form.cleaned_data["depth"]
             form.instance.availableSpace = form.instance.totalSpace
 
             # can ocurr a error in save
             try:
                 form.save()
                 return render(request,
-                              "appLogin/storesCreate.html",{
-                               "form" : form,
-                               "success" : True,
-                               "text" : "the store has been updates: "
+                              "appLogin/storesCreate.html", {
+                                  "form": form,
+                                  "success": True,
+                                  "text": "the store has been updates: "
                               })
 
             # if ocurr a error
             except ValidationError as e:
                 print(e)
                 return render(request,
-                        "appLogin/storesCreate.html", {
-                            "form": form,
-                            "ERROR" : "" 
-                        })
+                              "appLogin/storesCreate.html", {
+                                  "form": form,
+                                  "ERROR": ""
+                              })
         else:
             return render(request,
                           "appLogin/storesCreate.html",
-                          {"form" : form})
-        
+                          {"form": form})
+
     # logic to Get store form
     if storeId:
         store = Store.objects.get(pk=storeId)
         form = createStore(instance=store)
         return render(request,
-                        "appLogin/storesCreate.html",
-                        {"form" : form})
+                      "appLogin/storesCreate.html",
+                      {"form": form})
 
     # normal return
-    return render(request,"appLogin/stores.html")
+    return render(request, "appLogin/stores.html")
 
 
 @login_required
-def storesCreate(request : HttpRequest) -> HttpResponse:
+def storesCreate(request: HttpRequest) -> HttpResponse:
 
     # logic to create
     if request.method == "POST":
         form = createStore(request.POST)
         form.full_clean()
         if form.is_valid():
-            
+
             # refill atributes that there are not in form
-            form.instance.totalSpace = form.cleaned_data["height"] * form.cleaned_data["width"] * form.cleaned_data["depth"]
+            form.instance.totalSpace = form.cleaned_data["height"] * \
+                form.cleaned_data["width"] * form.cleaned_data["depth"]
             form.instance.availableSpace = form.instance.totalSpace
             form.save()
-            
+
             # return the store created
             return render(request,
-                        "appLogin/storesCreate.html", {
-                            "form": form,
-                            "success": True,
-                            "text": "the store has been created: "
-                        })
-            
+                          "appLogin/storesCreate.html", {
+                              "form": form,
+                              "success": True,
+                              "text": "the store has been created: "
+                          })
+
         # form is not valid
         else:
             return render(request,
@@ -263,8 +295,8 @@ def storesCreate(request : HttpRequest) -> HttpResponse:
                           {"form": form})
 
     form = createStore()
-    return render(request, "appLogin/storesCreate.html", {"form" : form})
-    
+    return render(request, "appLogin/storesCreate.html", {"form": form})
+
 
 #########################################################
 #               resources that is not views
@@ -280,7 +312,7 @@ def listClients(request: HttpRequest) -> JsonResponse:
     LENGTH = int(request.GET.get('length', 10))
     SEARCH_VALUE = request.GET.get('search', '').strip()
     clients_list = Client.objects.filter(isDeleted=False).order_by("id")
-    
+
     # Apply search filter if search value is provided
     if SEARCH_VALUE:
         clients_list = clients_list.filter(
@@ -291,7 +323,7 @@ def listClients(request: HttpRequest) -> JsonResponse:
             Q(phone__icontains=SEARCH_VALUE) |
             Q(cedula__icontains=SEARCH_VALUE)
         )
-    
+
     # Convert to values after filtering
     clients_list = clients_list.values(*clientsDatatable)
     # Use Paginator
@@ -308,23 +340,28 @@ def listClients(request: HttpRequest) -> JsonResponse:
         clients = paginator.page(paginator.num_pages)
 
     return JsonResponse({
-        "clients" : list(clients),
+        "clients": list(clients),
         'draw': DRAW,
         'recordsTotal': paginator.count,
         'recordsFiltered': paginator.count,
     })
 
 # delete client
-async def deleteClient(request: HttpRequest, id : int) -> HttpResponse:
+
+
+async def deleteClient(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
-            client = await Client.objects.aget(pk=id)
+            with transaction.atomic():
+                client = await Client.objects.aget(pk=id)
+                client.record_set.update(isDeleted=True)
+                client.isDeleted = True
+                await client.asave()
         except Exception as e:
             return HttpResponse(e)
-        client.isDeleted = True
-        await client.asave()
+
+        # all was OK
         return HttpResponse(status=200)
-    
 
 
 # Return data of products
@@ -336,14 +373,14 @@ def listProducts(request: HttpRequest) -> HttpResponse:
     LENGTH = int(request.GET.get('length', 10))
     SEARCH_VALUE = request.GET.get('search', '').strip()
     products_list = Product.objects.filter(isDeleted=False).order_by("id")
-    
+
     # Apply search filter if search value is provided
     if SEARCH_VALUE:
         products_list = products_list.filter(
             Q(name__icontains=SEARCH_VALUE) |
-            Q(descriptions__icontains=SEARCH_VALUE) 
+            Q(descriptions__icontains=SEARCH_VALUE)
         )
-    
+
     # Convert to values after filtering
     products_list = products_list.values(*productsDatatable)
     # Use Paginator
@@ -360,14 +397,16 @@ def listProducts(request: HttpRequest) -> HttpResponse:
         products = paginator.page(paginator.num_pages)
 
     return JsonResponse({
-        "products" : list(products),
+        "products": list(products),
         'draw': DRAW,
         'recordsTotal': paginator.count,
         'recordsFiltered': paginator.count,
     })
 
 # delete product
-async def deleteProduct(request: HttpRequest, id : int) -> HttpResponse:
+
+
+async def deleteProduct(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
             product = await Product.objects.aget(pk=id)
@@ -396,15 +435,15 @@ def listStores(request: HttpRequest) -> HttpResponse:
             Q(totalSpace__icontains=SEARCH_VALUE) |
             Q(availableSpace__icontains=SEARCH_VALUE) |
             Q(recordQuantity__icontains=SEARCH_VALUE) |
-            Q(adress__icontains=SEARCH_VALUE) 
+            Q(adress__icontains=SEARCH_VALUE)
         )
-        
+
     # Convert to values after filtering
     stores_list = stores_list.values(*storesDatatable)
-     # Use Paginator
+    # Use Paginator
     paginator = Paginator(stores_list, LENGTH)
     PAGENUMBER = (START // LENGTH) + 1
-    
+
     try:
         stores = paginator.page(PAGENUMBER)
     except PageNotAnInteger:
@@ -415,14 +454,16 @@ def listStores(request: HttpRequest) -> HttpResponse:
         stores = paginator.page(paginator.num_pages)
 
     return JsonResponse({
-        "stores" : list(stores),
+        "stores": list(stores),
         'draw': DRAW,
         'recordsTotal': paginator.count,
         'recordsFiltered': paginator.count,
     })
 
 # delete a store
-async def deleteStore(request: HttpRequest, id : int) -> HttpResponse:
+
+
+async def deleteStore(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
             store = await Store.objects.aget(pk=id)
@@ -431,6 +472,19 @@ async def deleteStore(request: HttpRequest, id : int) -> HttpResponse:
         store.isDeleted = True
         await store.asave()
         return HttpResponse(status=200)
-    
 
 
+# return data of store
+@login_required
+def listRecords(request: HttpRequest) -> HttpResponse:
+
+    record = Record.objects.filter(isDeleted=False).annotate(clientFullName= Concat(
+        F("idClient__names"),
+        Value(" "),
+        F("idClient__lastNames"),
+        output_field=CharField(),),
+        storeName = F("idStore__name")).order_by("id").values("clientFullName", "storeName",*recordsDatatable)
+
+    return JsonResponse({
+        "records": list(record)
+    })

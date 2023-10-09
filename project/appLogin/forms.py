@@ -30,3 +30,5 @@ class createStore(forms.ModelForm):
     class Meta:
         model = Store
         fields = list(storeAtributes) 
+
+# forms to read a client
