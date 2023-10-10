@@ -50,44 +50,59 @@ Zay Software commercial
                         </table>
                     </div>
                 </div>
-                {% comment "the modal warning of delete costumer" %}{% endcomment %}
-                <div class="modal fade" id="warningModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">warning</h5>
-                            </div>
-                            <div class="modal-body">
-                                <p>Are you sure you want to delete this costumer?</p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <button id="accept-button" type="button" class="btn btn-primary">Accept</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% comment "the modalwarning of delete costumer" %}{% endcomment %}
 
-                {% comment "the modal information of delete costumer" %}{% endcomment %}
-                <div class="modal fade" id="infoModal" data-bs-backdrop="static" data-bs-keyboard="false"
+                {% comment "the modal information of costumer" %}{% endcomment %}
+                <div class="modal fade" id="infoClient" data-bs-backdrop="static" data-bs-keyboard="false"
                 tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="staticBackdropLabel">Information</h5>
+                                <h5 class="modal-title" id="staticBackdropLabel">Customer Details</h5>
                             </div>
-                            <div class="modal-body">
-                                <p>the customer has been successfully deleted</p>
+                            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                {% comment "here go the content of costumer" %}{% endcomment %}
+                                <p><strong>Name:</strong> <span id="clientName"></span></p>
+                                <p><strong>Last Name:</strong> <span id="clientLastName"></span></p>
+                                <p><strong>Email:</strong> <span id="clientEmail"></span></p>
+                                <p><strong>Address:</strong> <span id="clientAddress"></span></p>
+                                <p><strong>Phone:</strong> <span id="clientPhone"></span></p>
+                                <p><strong>Cedula:</strong> <span id="clientCedula"></span></p>
+                                <p><strong>Birthdate:</strong> <span id="clientBirthdate"></span></p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" id="refresh-button">Accept</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% comment "the modal to information or update client" %}{% endcomment %}
+
+                {% comment "the modal information of costumer" %}{% endcomment %}
+                <div class="modal fade" id="infoStore" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Store Details</h5>
+                            </div>
+                            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                {% comment "here go the content of costumer" %}{% endcomment %}
+                                <p><strong>Name:</strong> <span id="storeName"></span></p>
+                                <p><strong>Location:</strong> <span id="storeLocation"></span></p>
+                                <p><strong>Dimensions:</strong> <span id="storeDimensions"></span></p>
+                                <p><strong>Total Space:</strong> <span id="storeTotalSpace"></span></p>
+                                <p><strong>Available Space:</strong> <span id="storeAvailableSpace"></span></p>
+                                <p><strong>Record Quantity:</strong> <span id="storeRecordQuantity"></span></p>
+                                <p><strong>Address:</strong> <span id="storeAddress"></span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment "the modal to information or update client" %}{% endcomment %}
+
             </div>
         </div>
     </div>

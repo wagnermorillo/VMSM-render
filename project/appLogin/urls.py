@@ -12,10 +12,12 @@ urlpatterns = [
     
     # resources
     path("resources/listClients/", views.listClients, name="listClients"),
+    path("resources/listClients/<int:id>/", views.getClient, name="getClient"),
     path("resources/deleteClient/<int:id>/", views.deleteClient, name="deleteClient"),
     path("resources/listProducts/", views.listProducts, name="listProducts"),
     path("resources/deleteProduct/<int:id>/", views.deleteProduct, name="deleteProduct"),
     path("resources/listStores/", views.listStores, name="listStores"),
+    path("resources/listStores/<int:id>/", views.getStore, name="getStore"),
     path("resources/deleteStore/<int:id>/", views.deleteStore, name="deleteStore"),
     path("resources/listRecords/", views.listRecords, name="listRecords"),
 

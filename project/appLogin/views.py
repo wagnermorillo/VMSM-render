@@ -7,7 +7,7 @@ from django.db.models import Q, F, Value, CharField
 from django.db.models.functions import Concat
 from django.db import transaction
 from .models import Client, Product, Record, Store
-from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable, recordsDatatable
+from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable, recordsDatatable, clientsAtributes
 from .forms import createClient, createProduct, createStore
 from asgiref.sync import sync_to_async
 # Create your views here
@@ -209,7 +209,7 @@ def productsCreate(request: HttpRequest) -> HttpResponse:
 #               views of store
 #########################################################
 
-
+@sync_to_async
 @login_required
 def stores(request: HttpRequest) -> HttpResponse:
 
@@ -304,6 +304,7 @@ def storesCreate(request: HttpRequest) -> HttpResponse:
 
 
 # Return data of clients
+@sync_to_async
 @login_required
 def listClients(request: HttpRequest) -> JsonResponse:
     # query params
@@ -364,7 +365,31 @@ async def deleteClient(request: HttpRequest, id: int) -> HttpResponse:
         return HttpResponse(status=200)
 
 
+# get client by id only one
+async def getClient(request: HttpRequest, id: int) -> HttpResponse:
+
+    if request.method == "GET":
+        try:
+            client = await Client.objects.aget(pk=id)
+            # convert to a dict
+            data = {
+                "names" : client.names,
+                "lastNames": client.lastNames,
+                "email":client.email,
+                "adress":client.adress,
+                "phone":client.phone,
+                "cedula":client.cedula,
+                "birthdate":client.birthdate,
+            }
+            return JsonResponse({
+                "client": data
+            })
+        except Exception as e:
+            return Http404("client not found")
+
+
 # Return data of products
+@sync_to_async
 @login_required
 def listProducts(request: HttpRequest) -> HttpResponse:
     # query params
@@ -403,9 +428,8 @@ def listProducts(request: HttpRequest) -> HttpResponse:
         'recordsFiltered': paginator.count,
     })
 
+
 # delete product
-
-
 async def deleteProduct(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
@@ -418,6 +442,7 @@ async def deleteProduct(request: HttpRequest, id: int) -> HttpResponse:
 
 
 # return data of store
+@sync_to_async
 @login_required
 def listStores(request: HttpRequest) -> HttpResponse:
     # query params
@@ -460,9 +485,8 @@ def listStores(request: HttpRequest) -> HttpResponse:
         'recordsFiltered': paginator.count,
     })
 
+
 # delete a store
-
-
 async def deleteStore(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
@@ -474,16 +498,42 @@ async def deleteStore(request: HttpRequest, id: int) -> HttpResponse:
         return HttpResponse(status=200)
 
 
+# get store by id only one
+async def getStore(request: HttpRequest, id: int) -> HttpResponse:
+
+    if request.method == "GET":
+        try:
+            store = await Store.objects.aget(pk=id)
+            # convert to a dict
+            data = {
+                "location" : store.location,
+                "name": store.name,
+                "height":store.height,
+                "width":store.width,
+                "depth":store.depth,
+                "totalSpace":store.totalSpace,
+                "availableSpace":store.availableSpace,
+                "recordQuantity":store.recordQuantity,
+                "adress":store.adress,
+            }
+            return JsonResponse({
+                "store": data
+            })
+        except Exception as e:
+            return Http404("client not found")
+
+
 # return data of store
+@sync_to_async
 @login_required
 def listRecords(request: HttpRequest) -> HttpResponse:
 
-    record = Record.objects.filter(isDeleted=False).annotate(clientFullName= Concat(
+    record = Record.objects.filter(isDeleted=False).annotate(clientFullName=Concat(
         F("idClient__names"),
         Value(" "),
         F("idClient__lastNames"),
         output_field=CharField(),),
-        storeName = F("idStore__name")).order_by("id").values("clientFullName", "storeName",*recordsDatatable)
+        storeName=F("idStore__name")).order_by("id").values("clientFullName", "storeName", *recordsDatatable)
 
     return JsonResponse({
         "records": list(record)
