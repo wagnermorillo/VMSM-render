@@ -57,7 +57,7 @@ def home(request: HttpRequest) -> HttpResponse:
 # table format to READ record
 
 
-def register2(request: HttpRequest) -> HttpResponse:
+def registers(request: HttpRequest) -> HttpResponse:
 
     # normal render
     return render(request,
