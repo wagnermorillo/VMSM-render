@@ -74,6 +74,12 @@ $(document).ready(function () {
                     return `<button class="btnStore" data-idStore="${row.idStore}"> ${data} </button>`;
                 }
             },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<button class="btnProducts" data-idRecord="${row.id}">Products</button>`;
+                }
+            },
             { data: 'dateIn' },
             { data: 'dateOut' },
             {
@@ -101,7 +107,7 @@ $(document).ready(function () {
 
         ],
         columnDefs: [
-            { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
+            { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
             { orderable: false, targets: [] },
             { searchable: false, targets: [] },
         ],
@@ -159,7 +165,6 @@ $(document).on("click", ".btnStore", function () {
         type: "GET",
         dataType: 'json',
         success: function (data) {
-            console.log(data.store.location);
 
             // refill data of the fields
             $('#storeLocation').text(data.store.location);
@@ -175,6 +180,35 @@ $(document).on("click", ".btnStore", function () {
 
             // show the modal
             $("#infoStore").modal("show");
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+});
+
+
+// ajax to complete content of products
+$(document).on("click", ".btnProducts", function () {
+    var idRecord = $(this).attr("data-idRecord");
+
+    $.ajax({
+        url: `/resources/listProducts/${idRecord}`,
+        type: "GET",
+        dataType: 'json',
+        success: function (data) {
+
+            // clean the list products
+            $("#productsList").empty();
+
+            // refill the list products
+            $.each(data.products, function (index, product) {
+                $("#productsList").append(`
+                <li><strong>${index+1}. Name:</strong> ${product.idProduct__name} <strong>Quantity:</strong> ${product.quantity}</li>`);
+            });
+
+            // show the modal products
+            $("#infoProducts").modal("show");
         },
         error: function (error) {
             console.log(error);

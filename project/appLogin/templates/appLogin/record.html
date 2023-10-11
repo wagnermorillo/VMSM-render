@@ -38,6 +38,7 @@ Zay Software commercial
                                     <th class="centered table-danger">#</th>
                                     <th class="centered table-danger">Costumer</th>
                                     <th class="centered table-danger">Store</th>
+                                    <th class="centered table-danger">Products</th>
                                     <th class="centered table-danger">Date In</th>
                                     <th class="centered table-danger">Date Out</th>
                                     <th class="centered table-danger">Dimensions</th>
@@ -85,7 +86,7 @@ Zay Software commercial
                             <div class="modal-header">
                                 <h5 class="modal-title" id="staticBackdropLabel">Store Details</h5>
                             </div>
-                            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                            <div class="modal-body">
                                 {% comment "here go the content of costumer" %}{% endcomment %}
                                 <p><strong>Name:</strong> <span id="storeName"></span></p>
                                 <p><strong>Location:</strong> <span id="storeLocation"></span></p>
@@ -94,6 +95,26 @@ Zay Software commercial
                                 <p><strong>Available Space:</strong> <span id="storeAvailableSpace"></span></p>
                                 <p><strong>Record Quantity:</strong> <span id="storeRecordQuantity"></span></p>
                                 <p><strong>Address:</strong> <span id="storeAddress"></span></p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% comment "the modal to information or update client" %}{% endcomment %}
+
+                {% comment "the modal information of costumer" %}{% endcomment %}
+                <div class="modal fade" id="infoProducts" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="staticBackdropLabel">Products Details</h5>
+                            </div>
+                            <div class="modal-body d-flex flex-column justify-content-center align-items-center">
+                                {% comment "here go the content of costumer" %}{% endcomment %}
+                                <ul id="productsList"></ul>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -117,4 +138,3 @@ Zay Software commercial
 <script src="{% static "js/record.js" %}"></script>
 <!-- End Script -->
 {% endblock %}
-
