@@ -93,15 +93,15 @@ $(document).ready(function () {
             {
                 data: 'isFragile',
                 render: function (data, type, row) {
-                    if (type === "display") {
-                        if (data) {
-                            // if is true, show the icon check
-                            return '<i class="fas fa-check-circle" style="color: green;"></i>';
-                        } else {
-                            // if is false, show the icon X
-                            return '<i class="fas fa-times-circle" style="color: red;"></i>';
-                        }
+
+                    if (row.isFragile) {
+                        // if is true, show the icon check
+                        return '<i class="fa-solid fa-circle-check" style="color: rgb(0, 255, 0);"></i>';
+                    } else {
+                        // if is false, show the icon X
+                        return '<i class="fa-solid fa-circle-xmark" style="color: rgb(255, 0, 0);"></i>';
                     }
+
                 }
             },
 
@@ -109,7 +109,7 @@ $(document).ready(function () {
         columnDefs: [
             { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9] },
             { orderable: false, targets: [] },
-            { searchable: false, targets: [] },
+            { searchable: false, targets: [1, 2, 4, 5, 6, 7, 8] },
         ],
         pageLength: 5,
 
@@ -204,7 +204,7 @@ $(document).on("click", ".btnProducts", function () {
             // refill the list products
             $.each(data.products, function (index, product) {
                 $("#productsList").append(`
-                <li><strong>${index+1}. Name:</strong> ${product.idProduct__name} <strong>Quantity:</strong> ${product.quantity}</li>`);
+                <li><strong>${index + 1}. Name:</strong> ${product.idProduct__name} <strong>Quantity:</strong> ${product.quantity}</li>`);
             });
 
             // show the modal products
