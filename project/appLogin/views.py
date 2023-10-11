@@ -54,11 +54,6 @@ def home(request: HttpRequest) -> HttpResponse:
 #########################################################
 
 
-# testing registro
-@login_required
-def register(request: HttpRequest) -> HttpResponse:
-    return render(request, "appLogin/register.html")
-
 # table format to READ record
 
 
@@ -554,3 +549,46 @@ def listRecords(request: HttpRequest) -> HttpResponse:
     return JsonResponse({
         "records": list(record)
     })
+
+
+
+#########################################################
+#               views of TESTING
+#########################################################
+
+# views.py
+from django.shortcuts import render
+from .models import Store
+from django.http import JsonResponse
+
+
+@login_required
+def testing(request: HttpRequest) -> HttpResponse:
+    return render(request, "appLogin/almacen_matriz.html")
+
+def almacen_matriz(request):
+    # Obtén la lista de almacenes
+    stores = Store.objects.all()
+
+    context = {
+        'stores': stores,  # Pasa la lista de almacenes al contexto
+    }
+
+    return render(request, 'almacen_matriz.html', context)
+
+
+def get_store_dimensions(request, store_id):
+    try:
+        store = Store.objects.get(id=store_id)
+        dimensions = {
+            'height': store.height,
+            'width': store.width,
+        }
+        return JsonResponse(dimensions)
+    except Store.DoesNotExist:
+        return JsonResponse({'error': 'Almacén no encontrado'}, status=404)
+
+def obtener_almacenes(request):
+    almacenes = Store.objects.filter(isDeleted=False).values("id", "name")
+    return JsonResponse({"almacenes": list(almacenes)})
+
