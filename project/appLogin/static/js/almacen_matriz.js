@@ -20,7 +20,7 @@ function crearMatriz(height, width, numCajas) {
     for (let y = 0; y < height; y++) {
         for (let x = 0; x < width; x++) {
             const square = document.createElement("div");
-            const uniqueId = `square_${x}_${y}`;
+            const uniqueId = ``;
             square.id = uniqueId;
             square.classList.add("square");
             matrizContainer.appendChild(square);
@@ -29,7 +29,7 @@ function crearMatriz(height, width, numCajas) {
             textElement.classList.add("text");
             textElement.textContent = uniqueId;
             square.appendChild(textElement);
-
+            //console.log("matriz es:")
             square.addEventListener("click", () => {
                 if (editable) {
                     square.classList.toggle("editable");
@@ -86,6 +86,17 @@ function cargarMatriz() {
 
                 // Llama a la función para crear la matriz
                 crearMatriz(height, width);
+
+                // Luego, obtén la información de los registros en este almacén y colócalos en la matriz.
+                fetch(`/get_records_in_store/${selectedStoreId}/`)
+                    .then((response) => response.json())
+                    .then((records) => {
+                        // Itera sobre los registros y coloca visualmente cada uno en la matriz.
+                        records.forEach((record) => {
+                            asignarRegistroALaMatriz(record);
+                        });
+                    })
+                    .catch((error) => console.error("Error al obtener registros del almacén:", error));
             })
             .catch((error) => console.error("Error al obtener dimensiones del almacén:", error));
     } else {
@@ -93,10 +104,18 @@ function cargarMatriz() {
     }
 }
 
-
-
-
-
+// Función para asignar visualmente un registro a la matriz
+function asignarRegistroALaMatriz(record) {
+    const matrizContainer = document.getElementById("matriz");
+    const uniqueId = `square_${record.widthPosition}_${record.heightPosition}`;
+    const square = items[uniqueId];
+    if (square) {
+        // Modifica el color de la celda o agrega un marcador para representar el registro
+        square.style.backgroundColor = "green"; // Puedes ajustar el color o el marcador según tus necesidades
+        // También puedes mostrar información adicional, como el nombre del cliente o el producto, en el hover.
+        square.title = `Cliente: ${record.idClient.names}, Producto: ${record.products.join(', ')}`;
+    }
+}
 
   document.addEventListener("DOMContentLoaded", function () {
     // Obtén la referencia al elemento <select> con id "storeSelect"
