@@ -1,14 +1,16 @@
-.container {
+.container{
     display: grid;
     margin: 10px;
+    border: 5px solid black;
 }
 
-.square {
+#matriz .square {
     width: 50px;
     height: 50px;
     background-color: red;
     border: 1px solid black;
 }
+
 
 .editable {
     background-color: yellow;
