@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F, Value, CharField
 from django.db.models.functions import Concat
 from django.db import transaction
-from .models import Client, Product, Record, Store
+from .models import Client, Product, Record, Store, RecordProduct
 from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable, recordsDatatable, clientsAtributes
 from .forms import createClient, createProduct, createStore
 from asgiref.sync import sync_to_async
@@ -439,6 +439,22 @@ async def deleteProduct(request: HttpRequest, id: int) -> HttpResponse:
         product.isDeleted = True
         await product.asave()
         return HttpResponse(status=200)
+    
+
+# get all product relation with a record
+def getProducts(request : HttpRequest, id : int) -> HttpResponse:
+
+    if request.method == "GET":
+        # Get all products and quantities related to that record
+        productRelated =    RecordProduct.objects.filter(
+                isDeleted = False,
+                idRecord = id
+        ).values("idProduct__name", "quantity")
+
+        # return all products related
+        return JsonResponse({
+            "products" : list(productRelated)
+        })
 
 
 # return data of store

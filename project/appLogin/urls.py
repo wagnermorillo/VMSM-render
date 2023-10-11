@@ -15,6 +15,7 @@ urlpatterns = [
     path("resources/listClients/<int:id>/", views.getClient, name="getClient"),
     path("resources/deleteClient/<int:id>/", views.deleteClient, name="deleteClient"),
     path("resources/listProducts/", views.listProducts, name="listProducts"),
+    path("resources/listProducts/<int:id>", views.getProducts, name="getProducts"),
     path("resources/deleteProduct/<int:id>/", views.deleteProduct, name="deleteProduct"),
     path("resources/listStores/", views.listStores, name="listStores"),
     path("resources/listStores/<int:id>/", views.getStore, name="getStore"),
@@ -29,5 +30,5 @@ urlpatterns = [
     path("main/products/create/", views.productsCreate, name="productsCreate"),
     path("main/stores/", views.stores, name="stores"),
     path("main/stores/create/", views.storesCreate, name="storesCreate"),
-    path("main/register/", views.register, name="register"), # nuevo registro/switch
+    path("main/register/", views.register2, name="register"), # nuevo registro/switch
 ]

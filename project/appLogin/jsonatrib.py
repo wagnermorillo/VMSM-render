@@ -61,9 +61,9 @@ storeAtributes = (
 
 # Record atrributes datatable
 recordsDatatable ={
+    "id",
     "idClient",
     "idStore",
-    #"products",
     "dateIn",
     "dateOut",
     "height",
