@@ -114,9 +114,9 @@ $(document).ready(function () {
 
         ],
         columnDefs: [
-            { className: "centered", targets: [0,1,2,3,4,5,6,7,8] },
+            { className: "centered", targets: [0, 1, 2, 3, 4, 5, 6, 7, 8] },
             { orderable: false, targets: [] },
-            { searchable: false, targets: [1,2,4,5,6,7] },
+            { searchable: false, targets: [1, 2, 3, 4, 5, 6, 7] },
         ],
         pageLength: 5,
 

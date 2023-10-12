@@ -100,6 +100,8 @@ class Record(models.Model):
     height = models.FloatField(validators=[MinValueValidator(0.0)])
     width = models.FloatField(validators=[MinValueValidator(0.0)])
     depth = models.FloatField(validators=[MinValueValidator(0.0)])
+    heightPosition = models.PositiveIntegerField(validators=[MinValueValidator(0)], null=True, blank=True)
+    widthPosition = models.PositiveIntegerField(validators=[MinValueValidator(0)], null=True, blank=True)
     totalVolume = models.FloatField(validators=[MinValueValidator(0.0)])
     isFragile = models.BooleanField()
     totalWeight = models.FloatField(validators=[MinValueValidator(0.0)])

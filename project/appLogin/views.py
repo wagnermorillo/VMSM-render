@@ -1,3 +1,7 @@
+from django.http import JsonResponse
+from .models import Store
+from django.shortcuts import render
+from turtle import width
 from django.forms import ValidationError
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -5,7 +9,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, F, Value, CharField
 from django.db.models.functions import Concat
-from django.db import transaction
+from django.db import transaction, DatabaseError
 from .models import Client, Product, Record, Store, RecordProduct
 from .jsonatrib import clientsDatatable, productsDatatable, storesDatatable, recordsDatatable, clientsAtributes
 from .forms import createClient, createProduct, createStore
@@ -57,7 +61,7 @@ def home(request: HttpRequest) -> HttpResponse:
 # table format to READ record
 
 
-def register2(request: HttpRequest) -> HttpResponse:
+def registers(request: HttpRequest) -> HttpResponse:
 
     # normal render
     return render(request,
@@ -345,19 +349,20 @@ def listClients(request: HttpRequest) -> JsonResponse:
 # delete client
 
 
-async def deleteClient(request: HttpRequest, id: int) -> HttpResponse:
+@sync_to_async
+@login_required
+def deleteClient(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
             with transaction.atomic():
-                client = await Client.objects.aget(pk=id)
+                client = Client.objects.get(pk=id)
                 client.record_set.update(isDeleted=True)
                 client.isDeleted = True
-                await client.asave()
-        except Exception as e:
-            return HttpResponse(e)
-
-        # all was OK
-        return HttpResponse(status=200)
+                client.save()
+                # all was OK
+                return HttpResponse(status=200)
+        except DatabaseError as e:
+            return Http404(e)
 
 
 # get client by id only one
@@ -368,13 +373,13 @@ async def getClient(request: HttpRequest, id: int) -> HttpResponse:
             client = await Client.objects.aget(pk=id)
             # convert to a dict
             data = {
-                "names" : client.names,
+                "names": client.names,
                 "lastNames": client.lastNames,
-                "email":client.email,
-                "adress":client.adress,
-                "phone":client.phone,
-                "cedula":client.cedula,
-                "birthdate":client.birthdate,
+                "email": client.email,
+                "adress": client.adress,
+                "phone": client.phone,
+                "cedula": client.cedula,
+                "birthdate": client.birthdate,
             }
             return JsonResponse({
                 "client": data
@@ -429,26 +434,26 @@ async def deleteProduct(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
             product = await Product.objects.aget(pk=id)
+            product.isDeleted = True
+            await product.asave()
+            return HttpResponse(status=200)
         except Exception as e:
-            return HttpResponse(e)
-        product.isDeleted = True
-        await product.asave()
-        return HttpResponse(status=200)
-    
+            return Http404(e)
+
 
 # get all product relation with a record
-def getProducts(request : HttpRequest, id : int) -> HttpResponse:
+def getProducts(request: HttpRequest, id: int) -> HttpResponse:
 
     if request.method == "GET":
         # Get all products and quantities related to that record
-        productRelated =    RecordProduct.objects.filter(
-                isDeleted = False,
-                idRecord = id
+        productRelated = RecordProduct.objects.filter(
+            isDeleted=False,
+            idRecord=id
         ).values("idProduct__name", "quantity")
 
         # return all products related
         return JsonResponse({
-            "products" : list(productRelated)
+            "products": list(productRelated)
         })
 
 
@@ -467,6 +472,9 @@ def listStores(request: HttpRequest) -> HttpResponse:
     if SEARCH_VALUE:
         stores_list = stores_list.filter(
             Q(name__icontains=SEARCH_VALUE) |
+            Q(height__icontains=SEARCH_VALUE) |
+            Q(width__icontains=SEARCH_VALUE) |
+            Q(depth__icontains=SEARCH_VALUE) |
             Q(location__icontains=SEARCH_VALUE) |
             Q(totalSpace__icontains=SEARCH_VALUE) |
             Q(availableSpace__icontains=SEARCH_VALUE) |
@@ -498,15 +506,19 @@ def listStores(request: HttpRequest) -> HttpResponse:
 
 
 # delete a store
-async def deleteStore(request: HttpRequest, id: int) -> HttpResponse:
+@sync_to_async
+@login_required
+def deleteStore(request: HttpRequest, id: int) -> HttpResponse:
     if request.method == "POST":
         try:
-            store = await Store.objects.aget(pk=id)
+            with transaction.atomic():
+                store = Store.objects.get(pk=id)
+                store.record_set.update(isDeleted=True)
+                store.isDeleted = True
+                store.save()
+            return HttpResponse(status=200)
         except Exception as e:
-            return HttpResponse(e)
-        store.isDeleted = True
-        await store.asave()
-        return HttpResponse(status=200)
+            return Http404(e)
 
 
 # get store by id only one
@@ -517,15 +529,15 @@ async def getStore(request: HttpRequest, id: int) -> HttpResponse:
             store = await Store.objects.aget(pk=id)
             # convert to a dict
             data = {
-                "location" : store.location,
+                "location": store.location,
                 "name": store.name,
-                "height":store.height,
-                "width":store.width,
-                "depth":store.depth,
-                "totalSpace":store.totalSpace,
-                "availableSpace":store.availableSpace,
-                "recordQuantity":store.recordQuantity,
-                "adress":store.adress,
+                "height": store.height,
+                "width": store.width,
+                "depth": store.depth,
+                "totalSpace": store.totalSpace,
+                "availableSpace": store.availableSpace,
+                "recordQuantity": store.recordQuantity,
+                "adress": store.adress,
             }
             return JsonResponse({
                 "store": data
@@ -539,32 +551,67 @@ async def getStore(request: HttpRequest, id: int) -> HttpResponse:
 @login_required
 def listRecords(request: HttpRequest) -> HttpResponse:
 
-    record = Record.objects.filter(isDeleted=False).annotate(clientFullName=Concat(
+    # query params
+    DRAW = int(request.GET.get('draw', 0))
+    START = int(request.GET.get('start', 0))
+    LENGTH = int(request.GET.get('length', 10))
+    SEARCH_VALUE = request.GET.get('search', '').strip()
+
+    record_list = Record.objects.filter(isDeleted=False).annotate(clientFullName=Concat(
         F("idClient__names"),
         Value(" "),
         F("idClient__lastNames"),
         output_field=CharField(),),
-        storeName=F("idStore__name")).order_by("id").values("clientFullName", "storeName", *recordsDatatable)
+        storeName=F("idStore__name")).order_by("id")
 
+    # apply seach filter if search value is provided
+    if SEARCH_VALUE:
+        record_list = record_list.filter(
+            Q(clientFullName__icontains=SEARCH_VALUE) |
+            Q(storeName__icontains=SEARCH_VALUE) |
+            Q(height__icontains=SEARCH_VALUE) |
+            Q(width__icontains=SEARCH_VALUE) |
+            Q(depth__icontains=SEARCH_VALUE) |
+            Q(dateIn__icontains=SEARCH_VALUE) |
+            Q(dateOut__icontains=SEARCH_VALUE) |
+            Q(totalVolume__icontains=SEARCH_VALUE) |
+            Q(totalWeight__icontains=SEARCH_VALUE)
+        )
+
+    # convert to values after filtering
+    record_list = record_list.values(
+        "clientFullName", "storeName", *recordsDatatable)
+
+    # Use paginator
+    paginator = Paginator(record_list, LENGTH)
+    PAGENUMBER = (START // LENGTH) + 1
+
+    try:
+        record = paginator.page(PAGENUMBER)
+    except PageNotAnInteger:
+        # If the page is not an integer, displays the first page.
+        record = paginator.page(1)
+    except EmptyPage:
+        # If the page is out of range, show the last page of results.
+        record = paginator.page(paginator.num_pages)
     return JsonResponse({
-        "records": list(record)
+        "records": list(record),
+        'draw': DRAW,
+        'recordsTotal': paginator.count,
+        'recordsFiltered': paginator.count,
     })
-
 
 
 #########################################################
 #               views of TESTING
 #########################################################
-
 # views.py
-from django.shortcuts import render
-from .models import Store
-from django.http import JsonResponse
 
 
 @login_required
 def testing(request: HttpRequest) -> HttpResponse:
     return render(request, "appLogin/almacen_matriz.html")
+
 
 def almacen_matriz(request):
     # Obtén la lista de almacenes
@@ -588,7 +635,17 @@ def get_store_dimensions(request, store_id):
     except Store.DoesNotExist:
         return JsonResponse({'error': 'Almacén no encontrado'}, status=404)
 
+
 def obtener_almacenes(request):
     almacenes = Store.objects.filter(isDeleted=False).values("id", "name")
     return JsonResponse({"almacenes": list(almacenes)})
+
+def get_records_in_store(request, store_id):
+    try:
+        # Recupera los registros del almacén especificado por store_id
+        records = Record.objects.filter(idStore=store_id, isDeleted=False).values("id", "idClient__names", "idClient__lastNames", "dateIn", "dateOut", "width", "height", "widthPosition", "heightPosition")
+
+        return JsonResponse({"records": list(records)})
+    except Exception as e:
+        return JsonResponse({'error': 'Error al obtener los registros del almacén'}, status=500)
 
