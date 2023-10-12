@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    command: ["python", "project/manage.py", "runserver", "0.0.0.0:8000"]
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_ENGINE=mssql
+      - DATABASE_NAME=appLogin
+      - DATABASE_HOST=db
+      - DATABASE_PORT=1433
+      - DATABASE_DRIVER=ODBC Driver 17 for SQL Server
+
+  db:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=YourStrong!Passw0rd
+    ports:
+      - "1433:1433"
+
+networks:
+  default:
+    external:
+      name: my-network
