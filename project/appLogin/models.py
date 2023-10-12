@@ -103,6 +103,7 @@ class Record(models.Model):
     heightPosition = models.PositiveIntegerField(validators=[MinValueValidator(0)], null=True, blank=True)
     widthPosition = models.PositiveIntegerField(validators=[MinValueValidator(0)], null=True, blank=True)
     totalVolume = models.FloatField(validators=[MinValueValidator(0.0)])
+    idSpace = models.CharField(max_length=255, null=True, blank=True)
     isFragile = models.BooleanField()
     totalWeight = models.FloatField(validators=[MinValueValidator(0.0)])
     createdAt = models.DateTimeField(auto_now_add=True)
