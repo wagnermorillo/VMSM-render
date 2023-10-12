@@ -643,8 +643,9 @@ def obtener_almacenes(request):
 def get_records_in_store(request, store_id):
     try:
         # Recupera los registros del almacén especificado por store_id
-        records = Record.objects.filter(idStore=store_id, isDeleted=False).values("id", "idClient__names", "idClient__lastNames", "dateIn", "dateOut")
+        records = Record.objects.filter(idStore=store_id, isDeleted=False).values("id", "idClient__names", "idClient__lastNames", "dateIn", "dateOut", "width", "height", "widthPosition", "heightPosition")
 
         return JsonResponse({"records": list(records)})
     except Exception as e:
         return JsonResponse({'error': 'Error al obtener los registros del almacén'}, status=500)
+
