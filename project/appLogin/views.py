@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from .models import Store
 from django.shortcuts import render
-from turtle import width
 from django.forms import ValidationError
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger

@@ -1,0 +1,10 @@
+.git/
+.github/
+env/
+README.md
+logo.png
+.gitignore
+colorPrimary.css
+.env.sample
+.env
+db.sqlite3
