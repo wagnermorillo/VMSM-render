@@ -1,12 +1,11 @@
 let editable = false;
 const items = {}; // Objeto para almacenar los cubos
-const cadena = "cell_1_1, cell_1_2, cell_3_3,";
 
-function asignarMatriz(){
+function asignarMatriz() {
     let cadena1 = document.getElementsByClassName("square");
     let string = "";
     for (var i = 0; i < cadena1.length; i++) {
-        if(window.getComputedStyle(cadena1[i]).getPropertyValue("background-color") == "rgb(255, 255, 0)"){
+        if (window.getComputedStyle(cadena1[i]).getPropertyValue("background-color") == "rgb(255, 255, 0)") {
             string += cadena1[i].id + ",";
         }
     }
@@ -35,6 +34,16 @@ function crearMatriz(height, width, numCajas) {
     const container = document.querySelector(".container");
     container.style.width = `calc(${containerWidth}px + 5px)`;
     container.style.height = `calc(${containerHeight}px + 5px)`;
+    const selectedStoreId = storeSelect.value;
+    let cadena = "";
+
+    fetch(`/get_full_spaces/${selectedStoreId}/`)
+                .then((response) => response.json())
+                .then((data) => {
+                    cadena = data.idSpace;
+                    console.log(data.records);
+                })
+                .catch((error) => console.error("Error al obtener registros del almacén:", error));
 
     // Crea la cuadrícula
     for (let y = 1; y <= height; y++) {
@@ -44,17 +53,20 @@ function crearMatriz(height, width, numCajas) {
             square.id = uniqueId;
 
             let normal = true;
-            var elementos = cadena.split(',');
-            for (var i = 0; i < elementos.length; i++) {
-                var elemento = elementos[i].trim();
-                if (elemento == uniqueId) {
-                    console.log(`|${elemento}|` + " " + `|${uniqueId}|`);
-                    console.log(elemento.length, uniqueId.length);
-                    square.classList.toggle("fill");
-                    normal = false;
-                } 
+            try {
+                var elementos = cadena.split(',');
+                for (var i = 0; i < elementos.length; i++) {
+                    var elemento = elementos[i].trim();
+                    if (elemento == uniqueId) {
+                        square.classList.toggle("fill");
+                        normal = false;
+                    }
+                }
+            } catch (error) {
+                console.log("no se ingreso una cadena");
             }
-            if(normal){
+
+            if (normal) {
                 square.classList.toggle("square");
             }
 
@@ -166,6 +178,7 @@ function editarMatriz() {
 
 function cargarMatriz() {
     const storeSelect = document.getElementById("storeSelect");
+    const clientSelect = document.getElementById("clientSelect");
     const selectedStoreId = storeSelect.value;
 
     if (selectedStoreId) {
@@ -221,6 +234,7 @@ function asignarRegistroALaMatriz(record) {
 document.addEventListener("DOMContentLoaded", function () {
     // Obtén la referencia al elemento <select> con id "storeSelect"
     const storeSelect = document.getElementById("storeSelect");
+    const clientSelect = document.getElementById("clientSelect");
     const cargarMatrizButton = document.getElementById("cargarMatrizButton"); // Asegúrate de ajustar el ID de tu botón
 
     // Asigna un evento al botón para cargar la matriz
@@ -250,11 +264,9 @@ document.addEventListener("DOMContentLoaded", function () {
                     console.log(data.records)
                 })
                 .catch((error) => console.error("Error al obtener registros del almacén:", error));
-
-
-
         }
     });
+
 
     // Realiza una solicitud AJAX para obtener la lista de almacenes disponibles
     fetch("/api/obtener_almacenes/") // Asegúrate de ajustar la URL según tu estructura de URL
@@ -269,6 +281,19 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         })
         .catch((error) => console.error("Error al obtener almacenes:", error));
+
+    fetch("/api/get_client_fullName/") // Asegúrate de ajustar la URL según tu estructura de URL
+        .then((response) => response.json())
+        .then((data) => {
+            // Llena las opciones del elemento <select> con los almacenes disponibles
+            data.client.forEach(function (client) {
+                const option = document.createElement("option");
+                option.value = client.id;
+                option.textContent = client.names + " " + client.lastNames;
+                clientSelect.appendChild(option);
+            });
+        })
+        .catch((error) => console.error("Error al obtener clientes:", error));
 });
 
 
