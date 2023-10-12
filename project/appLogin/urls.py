@@ -30,5 +30,11 @@ urlpatterns = [
     path("main/products/create/", views.productsCreate, name="productsCreate"),
     path("main/stores/", views.stores, name="stores"),
     path("main/stores/create/", views.storesCreate, name="storesCreate"),
-    path("main/register/", views.register, name="register"), # nuevo registro/switch
+    
+    path("main/register/", views.register2, name="register"), 
+    path("main/testing/", views.testing, name="testing"), # nuevo registro/switch
+
+    #TESTING
+    path('get_store_dimensions/<int:store_id>/', views.get_store_dimensions, name='get_store_dimensions'),
+    path("api/obtener_almacenes/", views.obtener_almacenes, name="obtener_almacenes"),
 ]
