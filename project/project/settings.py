@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-import os, dotenv
+import os, dotenv, sys
 from pathlib import Path
 dotenv.load_dotenv()
 
@@ -92,13 +92,17 @@ DATABASES = {
     'default': {
         'ENGINE': os.getenv("ENGINE"),
         'NAME': os.getenv("NAME"),
-        'USER':'',                     
-        'PASSWORD':'',                 
-        'HOST': os.getenv("HOST"), # "localhost" is also possible
-        'PORT':'',                   
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': os.getenv("HOST"),  # "localhost" is also possible
+        'PORT': '',
         'OPTIONS': {
             'driver': os.getenv("DRIVER"),
         },
+    },
+    "test": {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -150,3 +154,6 @@ LOGOUT_REDIRECT_URL = "/"
 
 # logs
 
+# to implement a local database to test
+if "test" in sys.argv:
+    DATABASES['default'] = DATABASES['test']

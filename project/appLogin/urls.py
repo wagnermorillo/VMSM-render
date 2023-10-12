@@ -29,6 +29,7 @@ urlpatterns = [
     path("main/products/", views.products, name="products"),
     path("main/products/create/", views.productsCreate, name="productsCreate"),
     path("main/stores/", views.stores, name="stores"),
+    path("main/stores/create/", views.storesCreate, name="storesCreate"),
     path("main/registers/", views.registers, name="registers"), # nuevo registro/switch
 
     #TESTING
