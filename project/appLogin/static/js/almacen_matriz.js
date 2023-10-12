@@ -1,5 +1,17 @@
 let editable = false;
 const items = {}; // Objeto para almacenar los cubos
+const cadena = "cell_1_1, cell_1_2, cell_3_3,";
+
+function asignarMatriz(){
+    let cadena1 = document.getElementsByClassName("square");
+    let string = "";
+    for (var i = 0; i < cadena1.length; i++) {
+        if(window.getComputedStyle(cadena1[i]).getPropertyValue("background-color") == "rgb(255, 255, 0)"){
+            string += cadena1[i].id + ",";
+        }
+    }
+    console.log(string);
+}
 
 function crearMatriz(height, width, numCajas) {
     const tamanoCajas = 55;
@@ -16,7 +28,7 @@ function crearMatriz(height, width, numCajas) {
     matrizContainer.style.gridTemplateColumns = `repeat(${width}, ${tamanoCajas}px)`;
     matrizContainer.style.gridTemplateRows = `repeat(${height}, ${tamanoCajas}px)`;
 
-    const containerWidth = width * (tamanoCajas + 1); 
+    const containerWidth = width * (tamanoCajas + 1);
     const containerHeight = height * (tamanoCajas + 1);
 
     // Establece el ancho y alto calculados en el .container
@@ -30,7 +42,22 @@ function crearMatriz(height, width, numCajas) {
             const square = document.createElement("div");
             const uniqueId = `cell_${y}_${x}`;
             square.id = uniqueId;
-            square.classList.add("square");
+
+            let normal = true;
+            var elementos = cadena.split(',');
+            for (var i = 0; i < elementos.length; i++) {
+                var elemento = elementos[i].trim();
+                if (elemento == uniqueId) {
+                    console.log(`|${elemento}|` + " " + `|${uniqueId}|`);
+                    console.log(elemento.length, uniqueId.length);
+                    square.classList.toggle("fill");
+                    normal = false;
+                } 
+            }
+            if(normal){
+                square.classList.toggle("square");
+            }
+
             matrizContainer.appendChild(square);
 
             const textElement = document.createElement("span");
@@ -39,6 +66,15 @@ function crearMatriz(height, width, numCajas) {
             square.appendChild(textElement);
             //console.log("matriz es:")
             square.addEventListener("click", () => {
+                console.log("haz hecho click en: " + uniqueId);
+                console.log("haz hecho click en: " + window.getComputedStyle(square).getPropertyValue("background-color"));
+                if (window.getComputedStyle(square).getPropertyValue("background-color") == "rgb(0, 128, 0)") {
+                    square.style.backgroundColor = "yellow";
+                }
+                else if (window.getComputedStyle(square).getPropertyValue("background-color") == "rgb(255, 255, 0)") {
+                    square.style.backgroundColor = "green";
+                }
+
                 if (editable) {
                     square.classList.toggle("editable");
                     cambiarColorPorId(uniqueId);
@@ -202,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         // Asignar 0 en lugar de null
                         data = { records: [] }; // Crear un objeto con una propiedad "records" que sea un array vacío
                     }
-                    
+
                     if (Array.isArray(data.records)) {
                         data.records.forEach((record) => {
                             // Procesa los registros aquí
@@ -217,22 +253,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-            }
-        });
-                
-                // Realiza una solicitud AJAX para obtener la lista de almacenes disponibles
-                fetch("/api/obtener_almacenes/") // Asegúrate de ajustar la URL según tu estructura de URL
-                    .then((response) => response.json())
-                    .then((data) => {
-                        // Llena las opciones del elemento <select> con los almacenes disponibles
-                        data.almacenes.forEach(function (almacen) {
-                            const option = document.createElement("option");
-                            option.value = almacen.id;
-                            option.textContent = almacen.name;
-                            storeSelect.appendChild(option);
-                        });
-                    })
-                    .catch((error) => console.error("Error al obtener almacenes:", error));
+        }
+    });
+
+    // Realiza una solicitud AJAX para obtener la lista de almacenes disponibles
+    fetch("/api/obtener_almacenes/") // Asegúrate de ajustar la URL según tu estructura de URL
+        .then((response) => response.json())
+        .then((data) => {
+            // Llena las opciones del elemento <select> con los almacenes disponibles
+            data.almacenes.forEach(function (almacen) {
+                const option = document.createElement("option");
+                option.value = almacen.id;
+                option.textContent = almacen.name;
+                storeSelect.appendChild(option);
+            });
+        })
+        .catch((error) => console.error("Error al obtener almacenes:", error));
 });
 
 
