@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .models import Store
+from .models import Store, Client, Record
 from django.shortcuts import render
 from django.forms import ValidationError
 from django.http import Http404, HttpRequest, HttpResponse, JsonResponse
@@ -633,11 +633,25 @@ def get_store_dimensions(request, store_id):
         return JsonResponse(dimensions)
     except Store.DoesNotExist:
         return JsonResponse({'error': 'Almacén no encontrado'}, status=404)
+   
+def get_full_spaces(request, store_id):
+    try:
+        record = Record.objects.get(idStore=store_id)
+        fullName = {
+            'idSpace': record.idSpace,
+        }
+        return JsonResponse(fullName)
+    except Store.DoesNotExist:
+        return JsonResponse({'error': 'Almacén no encontrado'}, status=404)    
 
 
 def obtener_almacenes(request):
     almacenes = Store.objects.filter(isDeleted=False).values("id", "name")
     return JsonResponse({"almacenes": list(almacenes)})
+
+def get_client_fullName(request):
+    clients = Client.objects.filter(isDeleted=False).values("id", "names", "lastNames")
+    return JsonResponse({"client": list(clients)})
 
 def get_records_in_store(request, store_id):
     try:

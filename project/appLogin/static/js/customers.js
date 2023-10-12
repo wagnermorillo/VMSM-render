@@ -107,7 +107,7 @@ $(document).ready(function () {
             {
                 data: 'phone',
                 render: function (data, type, row) {
-                    if (type === 'display' && data.length === 10) {
+                    if (type === 'display' && data.length === 11) {
                         return '(' + data.substring(0, 3) + ')-' + data.substring(3, 6) + '-' + data.substring(6, 10);
                     }
                     return data;

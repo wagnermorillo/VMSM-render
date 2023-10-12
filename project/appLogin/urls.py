@@ -35,6 +35,8 @@ urlpatterns = [
     #TESTING
     path("main/testing/", views.testing, name="testing"), # nuevo registro/switch
     path('get_store_dimensions/<int:store_id>/', views.get_store_dimensions, name='get_store_dimensions'),
+    path('get_full_spaces/<int:store_id>/', views.get_full_spaces, name='get_full_spaces'),
+    path("api/get_client_fullName/", views.get_client_fullName, name='get_client_fullName'),
     path("api/obtener_almacenes/", views.obtener_almacenes, name="obtener_almacenes"),
     path('get_records_in_store/<int:store_id>/', views.get_records_in_store, name='get_records_in_store'),
 ]
